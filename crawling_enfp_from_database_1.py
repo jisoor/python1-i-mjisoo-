@@ -22,8 +22,8 @@ next_button_xpath = '//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/d
 review_number_xpath = '//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[5]/h2'
 
 #  #리뷰갯수   형태는 Typology Comments 5437
-for l in range(33): #전체 프로필이 990개 있다고 가정
-    for i in range(30*l+1,30*(l+1)+1):  # enfp로 검색한 페이지의 총 article수가 몇개인지 모르므로 1000으로 설정. 30개씩
+for l in range(1): #전체 프로필이 60개
+    for i in range(3,31):  # enfp로 검색한 페이지의 총 article수가 몇개인지 모르므로 1000으로 설정. 30개씩
         try:
             time.sleep(1)
             title_xpath ='//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[3]/a[{}]/div/div[2]/h2'.format(i)
@@ -31,7 +31,7 @@ for l in range(33): #전체 프로필이 990개 있다고 가정
             print(title)
 
             driver.find_element_by_xpath(title_xpath).click()
-            time.sleep(9)
+            time.sleep(12)
             driver.find_element_by_xpath(next_button_xpath).click()
             time.sleep(4)
             review_number = driver.find_element_by_xpath(review_number_xpath).text
@@ -57,8 +57,8 @@ for l in range(33): #전체 프로필이 990개 있다고 가정
                 # 스크롤 내리는 코드  import time
                 # Get scroll height
                 try:
-                    last_height = driver.execute_script("return document.body.scrollHeight")        #[1]
                     while True:
+                        last_height = driver.execute_script("return document.body.scrollHeight")        #[1]
                         # Scroll down to bottom                                                     #[2]
                         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
                         # Wait to load page
@@ -67,7 +67,6 @@ for l in range(33): #전체 프로필이 990개 있다고 가정
                         time.sleep(3)
                         # Calculate new scroll height and compare with last scroll height          #[5]
                         new_height = driver.execute_script("return document.body.scrollHeight")
-
                         if new_height == last_height:                                              #[6]
                             break
                         else:
@@ -120,4 +119,3 @@ for l in range(33): #전체 프로필이 990개 있다고 가정
 
 print(len(titles))
 driver.close()
-
