@@ -20,14 +20,14 @@ titles = []
 comments = []
 next_button_xpath = '//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[5]/div[1]/span[1]'
 review_number_xpath = '//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[5]/h2'
-mbti_type = ['estp', 'esfp', 'entp', 'estj', 'esfj', 'enfj', 'entj', 'istj', 'isfj', 'infj', 'intj', 'istp', 'isfp', 'infp', 'intp'] # enfp제외한 15개
+mbti_type = [ 'infj', 'intj', 'istp', 'isfp', 'infp', 'intp'] # enfp제외한 15개 #'isfj',
 for m in mbti_type:
     url = 'https://www.personality-database.com/search?keyword={}'.format(m)
     driver.get(url)
     time.sleep(2)
     #  #리뷰갯수   형태는 Typology Comments 5437
-    for l in range(2): #전체 프로필 각60개 따오기
-        for i in range(1+(30*l),1+(30*(l+1))):  # enfp로 검색한 페이지의 총 article수가 몇개인지 모르므로 1000으로 설정. 30개씩
+    for l in range(1): #전체 프로필 각60개 따오기
+        for i in range(1,31):  # enfp로 검색한 페이지의 총 article수가 몇개인지 모르므로 1000으로 설정. 30개씩
             try:
                 time.sleep(1)
                 title_xpath ='//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[3]/a[{}]/div/div[2]/h2'.format(i)
