@@ -20,7 +20,7 @@ titles = []
 comments = []
 next_button_xpath = '//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[5]/div[1]/span[1]'
 review_number_xpath = '//*[@id="root"]/div/section/main/div[1]/div[2]/div[1]/div/div[1]/div[5]/h2'
-mbti_type = [ 'infj', 'intj', 'istp', 'isfp', 'infp', 'intp'] # enfp제외한 15개 #'isfj',
+mbti_type = ['isfj', 'intp'] # enfp제외한 15개 #'isfj',
 for m in mbti_type:
     url = 'https://www.personality-database.com/search?keyword={}'.format(m)
     driver.get(url)
