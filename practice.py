@@ -59,3 +59,28 @@ token = Tokenizer()
 token.fit_on_texts(X)   # 모든 유니크한 단어를 1:'지수', 2:'오늘' 이ㅣ런식으로 딕셔너리화함
 tokened_X = token.texts_to_sequences(X)
 print(tokened_X[:5])
+<<<<<<< HEAD
+=======
+
+##### 패딩 작업 ######
+# 서로 다른 개수의 단어로 이루어진 문장을 같은 길이로 만들어주기 위해 패딩사용, 0을 붙여서 길이를 맞춰 array형태로 변환한다.
+
+#최대 길이를 가진 문장 구하기
+max = 0
+for i in range(len(tokened_X)):
+    if max < len(tokened_X[i]):
+        max = len(tokened_X[i])
+print(max)
+
+X_pad = pad_sequences(tokened_X, max)
+print(X_pad[:10])
+
+# 참고자료 padded = pad_sequences(sequences, maxlen=6)  maxlen 파라미터는 시퀀스의 최대 길이를 제한합니다. 최대 길이를 6으로 지정하면 길이를 넘는 시퀀스는 잘라냅니다.
+
+X_train, X_test, Y_train, Y_test = train_test_split(X_pad, onehot_Y, test_size=0.1)
+print(X_train.shape, Y_train.shape)
+print(X_test.shape, Y_test.shape)
+
+xy = X_train, X_test, Y_train, Y_test
+np.save('./crawling/news_data_max_{}_wordsize_{}'.format(max, wordsize), xy)
+>>>>>>> d8a7526 (doing nltk ...)
