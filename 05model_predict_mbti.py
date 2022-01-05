@@ -1,18 +1,24 @@
 import pandas as pd
 import numpy as np
-
-from konlpy.tag import Okt
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.preprocessing import LabelEncoder
 from tensorflow.keras.utils import to_categorical
 import pickle
 from tensorflow.keras.models import load_model
+import nltk
+nltk.download('omw-1.4')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('wordnet')
 
-pd.set_option('display.unicode.east_asian_width', True)
+
+pd.set_option('display.unicode.'
+              'east_asian_width', True)
 
 
-X = 'jisoo is so kind and generous , passionate about her life'
+X = '''Holland’s Peter Parker wants nothing more than to jump into the fray – a prominent feature of Extraversion. His social life is weak, but it’s not because he doesn’t want one. He may not be a social A-lister in high school, but it’s not because he prefers to be alone. It’s just that as a dedicated crime fighter, he has little time to cultivate many friendships outside of class. 
+Peter’s eager to be accepted as a member of the Avengers, although he remains on the periphery. His banter is nonstop – not just while hiding behind a mask, like other versions of the character, but even as Peter Parker (see his back-and-forth with bodega owner Mr. Delmar in Homecoming.) He’s not only outgoing with people, but he’s also eager to enjoy all the experiences his unique powers offer him.'''
 Y = ['enfp','estp', 'esfp', 'entp', 'estj', 'esfj', 'enfj', 'entj', 'istj', 'isfj', 'infj', 'intj', 'istp', 'isfp', 'infp', 'intp']
 
 #target labeling
@@ -43,8 +49,9 @@ print(possed_X)
 lm = WordNetLemmatizer()
 for i in range(len(possed_X)):
     possed_X[i] = list(possed_X[i])
-    if (possed_X[i][1] == "VB") | (possed_X[i][1] == "VBD") | (possed_X[i][1] == "VBG")| (possed_X[i][1] == "VBN")| (possed_X[i][1] == "VBP")| (possed_X[i][1] == "VBZ"):
-        possed_X[i][0] = lm.lemmatize(possed_X[i], pos = 'v')
+    if (possed_X[i][1] == "VB") | (possed_X[i][1] == "VBD") | (possed_X[i][1] == "VBG") | (possed_X[i][1] == "VBN") | (possed_X[i][1] == "VBP") | (possed_X[i][1] == "VBZ"):
+        possed_X[i][0] = lm.lemmatize(possed_X[i][0], pos='v')
+
 
 print(possed_X)
 
@@ -52,8 +59,8 @@ print(possed_X)
 for i in range(len(possed_X)):
     possed_X[i] = possed_X[i][0]
 
-print('untagged\lists: ', possed_X )
-
+print('untagged\lists: ', possed_X)
+print(type(possed_X))
 # 한글자인 단어 빼기, stopwords에 관형사 빼기
 # 그 다음 tokenizing 시작
 
@@ -62,9 +69,8 @@ print('untagged\lists: ', possed_X )
 stopwords = pd.read_csv('./stopwords(Eng).csv')
 stopwords = stopwords.T
 stopwords.reset_index(inplace=True)
-print(stopwords.info())
-print(stopwords.columns)
-
+print(stopwords)
+print(list(stopwords['index']))
 # for j in range(len(X)):
 #     words=[]
 #     for i in range(len(X[j])):
@@ -72,12 +78,12 @@ print(stopwords.columns)
 #             if X[j][i] not in list(stopwords['index']):
 #                 words.append(X[j][i])
 #     X[j] = ' '.join(words)
+words = []
+for i in possed_X:
+    if len(i) > 1:
+        if i not in list(stopwords['index']):
+            words.append(i)
 
-for i in range(len(possed_X)):
-    words = []
-    if len(possed_X[i]) > 1:
-        if possed_X[i] not in list(stopwords['index']):
-            words.append(possed_X[i])
 X = ' '.join(words)
 print('불용어 까지 제거한 X', X)
 
@@ -88,16 +94,15 @@ print('불용어 까지 제거한 X', X)
 with open('./models/mbti_token.pickle', 'rb') as f:
     token = pickle.load(f)
 
-tokened_X = token.texts_to_sequences(X)
-print(tokened_X[:5])
+tokened_X = token.texts_to_sequences([X])
+print(tokened_X)
 
+if 1250 < len(tokened_X):
+    tokened_X = tokened_X[:1250]
 
-for i in range(len(tokened_X)):
-    if 1250 < len(tokened_X[i]):
-        tokened_X[i] = tokened_X[i][:1250]
 # padding
 X_pad = pad_sequences(tokened_X, 1250)
-print(X_pad[:10])
+print(X_pad)
 
 # model.load
 # model.predict(X_pad)
@@ -107,21 +112,23 @@ print(X_pad[:10])
 
 model = load_model('./models/mbti_classification_model_0.2888889014720917.h5')
 preds = model.predict(X_pad)
-predicts = []
-for pred in preds:
-    predicts.append(label[np.argmax(pred)])
+print(label[np.argmax(preds)])
+# predicts = []
+# for pred in preds:  # label 인덱싱
+#     predicts.append(label[np.argmax(pred)])
+#
+# print(predicts)
 
-print(predicts)
-df['predict'] = predicts
-pd.set_option('display.unicode.east_asian_width', True)
-pd.set_option('display.max_columns', 20)
-
-
-df['OX'] = 0
-for i in range(len(df)):
-    if df.loc[i, 'category'] == df.loc[i, 'predict']:
-        df.loc[i, 'OX'] = 'O'
-    else :
-        df.loc[i, 'OX'] = 'X'
-print(df.head(30))
-print(df['OX'].value_counts()/len(df))
+# df['predict'] = predicts
+# pd.set_option('display.unicode.east_asian_width', True)
+# pd.set_option('display.max_columns', 20)
+#
+#
+# df['OX'] = 0
+# for i in range(len(df)):
+#     if df.loc[i, 'category'] == df.loc[i, 'predict']:
+#         df.loc[i, 'OX'] = 'O'
+#     else :
+#         df.loc[i, 'OX'] = 'X'
+# print(df.head(30))
+# print(df['OX'].value_counts()/len(df))

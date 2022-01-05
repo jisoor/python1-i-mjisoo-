@@ -61,6 +61,7 @@ for i in range(len(X)):
         if (X[i][j][1] == "VB") | (X[i][j][1] == "VBD") | (X[i][j][1] == "VBG")| (X[i][j][1] == "VBN")| (X[i][j][1] == "VBP")| (X[i][j][1] == "VBZ"):
             X[i][j][0] = lm.lemmatize(X[i][j][0], pos='v')
 print(X[i])
+print('X의타입', type(X))
 
 # 모두 untag 해서 리스트 만들기
 for i in range(len(X)):
