@@ -1,0 +1,16 @@
+github에서
+requirements.txt  파일 있으면
+환경도 공유해야하자나~? 어떤 버전 어떤 패키지 설치 등등
+
+터미널에서, 
+내 환경을 requirements.txt로 변환
+pip freeze > requirements.txt  
+
+콘다에서 만든걸로 패키지 환경 등등 설치할수잇게
+conda env export > conda_requirements.txt
+
+# pip으로(설치하는법)
+pip install -r requirements.txt   : 아까 requirements.txt 만든거를 설치할거
+
+#conda로
+conda env create -f conda_requirements.txt

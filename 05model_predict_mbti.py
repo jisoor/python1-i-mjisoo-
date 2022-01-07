@@ -7,18 +7,19 @@ from tensorflow.keras.utils import to_categorical
 import pickle
 from tensorflow.keras.models import load_model
 import nltk
-nltk.download('omw-1.4')
-nltk.download('punkt')
-nltk.download('averaged_perceptron_tagger')
-nltk.download('wordnet')
+# nltk.download('omw-1.4')
+# nltk.download('punkt')
+# nltk.download('averaged_perceptron_tagger')
+# nltk.download('wordnet')
 
 
 pd.set_option('display.unicode.'
               'east_asian_width', True)
 
 
-X = '''Holland’s Peter Parker wants nothing more than to jump into the fray – a prominent feature of Extraversion. His social life is weak, but it’s not because he doesn’t want one. He may not be a social A-lister in high school, but it’s not because he prefers to be alone. It’s just that as a dedicated crime fighter, he has little time to cultivate many friendships outside of class. 
-Peter’s eager to be accepted as a member of the Avengers, although he remains on the periphery. His banter is nonstop – not just while hiding behind a mask, like other versions of the character, but even as Peter Parker (see his back-and-forth with bodega owner Mr. Delmar in Homecoming.) He’s not only outgoing with people, but he’s also eager to enjoy all the experiences his unique powers offer him.'''
+X = '''What is Gamoras personality?
+이미지 검색결과
+Personality… serious, focused, and honorable. Gamora is haunted by the atrocities she committed for her adopted father. While she despises Thanos for destroying her people, he is the most powerful being in the galaxy and she's spent her whole life without the power to meaningfully oppose him. '''
 Y = ['enfp','estp', 'esfp', 'entp', 'estj', 'esfj', 'enfj', 'entj', 'istj', 'isfj', 'infj', 'intj', 'istp', 'isfp', 'infp', 'intp']
 
 #target labeling
@@ -33,7 +34,6 @@ print(label)
 onehot_Y = to_categorical(labeled_Y)
 print(onehot_Y)
 # 형태소 분리, 한 글자/불용어 제거
-import nltk
 from nltk.tag import untag
 from nltk.stem import WordNetLemmatizer
 
@@ -112,7 +112,7 @@ print(X_pad)
 
 model = load_model('./models/mbti_classification_model_0.2888889014720917.h5')
 preds = model.predict(X_pad)
-print(label[np.argmax(preds)])
+print('예상 mbti:', label[np.argmax(preds)])
 # predicts = []
 # for pred in preds:  # label 인덱싱
 #     predicts.append(label[np.argmax(pred)])
